@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet href="Stock_keyring-Dateien/intl.css" type="text/css"?>
+<parsererror xmlns="http://www.mozilla.org/newlayout/xml/parsererror.xml">XML-Verarbeitungsfehler: Präfix nicht an einen Namespace gebunden
+Adresse: http://upload.wikimedia.org/wikipedia/commons/6/6d/Stock_keyring.svg
+Zeile Nr. 20, Spalte 3:<sourcetext>		&lt;ns:variableSets
+----------------^</sourcetext></parsererror>
