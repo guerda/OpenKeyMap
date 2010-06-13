@@ -2,6 +2,8 @@
 # -*- coding: UTF-8 -*-
 from Location import Location
 import Location
+from os import path
+from cPickle import * 
 """
 TODO
  - exclude first cities (top cities)
@@ -45,7 +47,20 @@ else:
 					all_cities[-1].state = current_state
 
 print all_cities
-
+# Dictionary of list
+cached_cities = {}
+# load cache --> pickle?
+if(path.exists("location.cache")):
+	try:
+		f.open("location.cache", "rw")
+		p = Pickler(f, -1)
+		print p
+		f.close()
+	except IOError:
+		print "Lese-/Schreibfehler"
+# get geo position for all cities
+# save geo position in cache --> pickle?
+# initialize template engine
 
 
 
