@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-from Location import Location
-import Location
+from location import Location
+import location
 from os import path
 from cPickle import * 
 """
@@ -14,7 +14,7 @@ offline = True
 all_cities = []
 
 if offline:
-	all_cities = Location.createSampleList()	
+	all_cities = location.createSampleList()	
 else:
 	import urllib2
 	import re
@@ -48,19 +48,32 @@ else:
 
 print all_cities
 # Dictionary of list
+tmp_city = Location("Viersen","Germany")
+tmp_city.lat = 51.0
+tmp_city.lon = 6.1
 cached_cities = {}
+# TODO convert to function?
+cached_cities[tmp_city.__hash__()] = tmp_city
+print cached_cities
 # load cache --> pickle?
 if(path.exists("location.cache")):
-	try:
-		f.open("location.cache", "rw")
-		p = Pickler(f, -1)
-		print p
-		f.close()
-	except IOError:
-		print "Lese-/Schreibfehler"
+	pass
+
+print "Get geo position for all cities"
 # get geo position for all cities
+for city in all_cities:
+	if cached_cities.has_key(city.__hash__()):
+		tmp_cached_city = cached_cities[city.__hash__()]
+		print tmp_cached_city
+		city.lat = tmp_cached_city.lat
+		city.lon = tmp_cached_city.lon
+	else:
+		pass
+		#set up request to geonames
+		# add to cache
+
+print "Geo positions found:"
+print all_cities
+
 # save geo position in cache --> pickle?
 # initialize template engine
-
-
-
