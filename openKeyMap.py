@@ -9,7 +9,7 @@ TODO
  - exclude first cities (top cities)
 
 """
-offline = True
+offline = False #True
 
 all_cities = []
 
