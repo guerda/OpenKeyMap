@@ -3,13 +3,13 @@
 from location import Location
 import location
 from os import path
-from cPickle import * 
+import pickle
 """
 TODO
  - exclude first cities (top cities)
 
 """
-offline = False #True
+offline = True
 
 all_cities = []
 
@@ -54,10 +54,18 @@ tmp_city.lon = 6.1
 cached_cities = {}
 # TODO convert to function?
 cached_cities[tmp_city.__hash__()] = tmp_city
-print cached_cities
+f = open("location.cache",'wb')
+pickle.dump(cached_cities, f)
+f.close()
+del cached_cities
+
 # load cache --> pickle?
 if(path.exists("location.cache")):
-	pass
+	f = open("location.cache","rb")
+	cached_cities = pickle.load(f)
+	f.close()
+
+print cached_cities
 
 print "Get geo position for all cities"
 # get geo position for all cities
