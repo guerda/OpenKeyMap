@@ -5,13 +5,8 @@ import location
 import re
 import sys
 from os import path
-<<<<<<< HEAD
-import pickle
-=======
-from cPickle import * 
 import urllib2
 import json
->>>>>>> origin/master
 """
 TODO
  - exclude first cities (top cities)
@@ -21,19 +16,19 @@ offline = True
 
 def get_location(city, country, state):
 	if(offline):
-		url = "http://ws.geonames.org/searchJSON?q=%s&country=%s&maxRows=1&adminCode1=%s" % (city, country, state)
-		doc = urllib2.urlopen(url).read()	
-		print json.loads(doc)
+		return {"lat": 51.0, "lon": 6.0}
 	else:
-		return None
+		url = "http://ws.geonames.org/searchJSON?q=%s&country=%s&maxRows=1&adminCode1=%s" % (city, country, state)
+		doc = urllib2.urlopen(url).read()
+		result = json.loads(doc)	
+		return result # Könnte klappen, muss ich aber überprüfen: Sind die Lat/Lon-Infos verschachtelt oder auf der ersten Ebene?
+		#{"lat": 52.0, "lon": 7} 
 
 all_cities = []
 
 if offline:
 	all_cities = location.createSampleList()	
 else:
-
-	import re
 	from BeautifulSoup import BeautifulSoup, SoupStrainer
 
 	url = "http://biglumber.com/x/web?va=1"
@@ -48,7 +43,6 @@ else:
 	current_country = ""
 	current_state = ""
 	for line in soup:
-	#	print line
 		m = r.match(line)
 		if m != None:
 			href = m.group(1)
@@ -65,8 +59,8 @@ else:
 print "Get geo position for all cities..."
 # get geo position for all cities
 for city in all_cities:
-	get_location(city.name, city.country, city.state)
+	print get_location(city.name, city.country, city.state)
 	break
 
 # initialize template engine
-
+	
