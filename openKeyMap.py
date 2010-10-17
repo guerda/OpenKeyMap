@@ -2,8 +2,16 @@
 # -*- coding: UTF-8 -*-
 from location import Location
 import location
+import re
+import sys
 from os import path
+<<<<<<< HEAD
 import pickle
+=======
+from cPickle import * 
+import urllib2
+import json
+>>>>>>> origin/master
 """
 TODO
  - exclude first cities (top cities)
@@ -11,12 +19,20 @@ TODO
 """
 offline = True
 
+def get_location(city, country, state):
+	if(offline):
+		url = "http://ws.geonames.org/searchJSON?q=%s&country=%s&maxRows=1&adminCode1=%s" % (city, country, state)
+		doc = urllib2.urlopen(url).read()	
+		print json.loads(doc)
+	else:
+		return None
+
 all_cities = []
 
 if offline:
 	all_cities = location.createSampleList()	
 else:
-	import urllib2
+
 	import re
 	from BeautifulSoup import BeautifulSoup, SoupStrainer
 
@@ -46,42 +62,11 @@ else:
 				if current_country == "USA":
 					all_cities[-1].state = current_state
 
-print all_cities
-# Dictionary of list
-tmp_city = Location("Viersen","Germany")
-tmp_city.lat = 51.0
-tmp_city.lon = 6.1
-cached_cities = {}
-# TODO convert to function?
-cached_cities[tmp_city.__hash__()] = tmp_city
-f = open("location.cache",'wb')
-pickle.dump(cached_cities, f)
-f.close()
-del cached_cities
-
-# load cache --> pickle?
-if(path.exists("location.cache")):
-	f = open("location.cache","rb")
-	cached_cities = pickle.load(f)
-	f.close()
-
-print cached_cities
-
-print "Get geo position for all cities"
+print "Get geo position for all cities..."
 # get geo position for all cities
 for city in all_cities:
-	if cached_cities.has_key(city.__hash__()):
-		tmp_cached_city = cached_cities[city.__hash__()]
-		print tmp_cached_city
-		city.lat = tmp_cached_city.lat
-		city.lon = tmp_cached_city.lon
-	else:
-		pass
-		#set up request to geonames
-		# add to cache
+	get_location(city.name, city.country, city.state)
+	break
 
-print "Geo positions found:"
-print all_cities
-
-# save geo position in cache --> pickle?
 # initialize template engine
+
