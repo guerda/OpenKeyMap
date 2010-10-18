@@ -11,9 +11,9 @@ class Location:
 
 	def __repr__(self):
 		if self.state == None:
-			return "%s in %s (%d;%d)" % (self.name, self.country, self.lat, self.lon)
+			return "%s in %s (%f;%f)" % (self.name, self.country, self.lat, self.lon)
 		else:
-			return "%s in %s, %s (%d;%d)" % (self.name, self.state, self.country, self.lat, self.lon)
+			return "%s in %s, %s (%f;%f)" % (self.name, self.state, self.country, self.lat, self.lon)
 
 	def __hash__(self):
 		return ("%s#%s#%s" % (self.name, self.state, self.country)).__hash__()
