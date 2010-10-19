@@ -1,0 +1,197 @@
+<html>
+<head>
+<title>OpenKeyMap - BigLumber key listings on a map</title>
+<style type="text/css">
+	* {
+		font-family: ubuntu, sans-serif;
+	}
+
+	.shadow {
+		-moz-box-shadow: 4px 4px 4px #666;
+		box-shadow: 4px 4px 4px #666;
+		-webkit-box-shadow: 4px 4px 4px #666;
+	}	
+
+	#map {
+		margin: auto !important;
+		width: 90%;
+		height: 90%;
+	}
+
+	#info {
+		width:66%;
+		margin:auto;
+		padding-top:2em;
+		padding-bottom:3em;
+	}
+
+	#backgroundPopup {
+		display: none;
+		position: fixed;
+		_position: absolute; /* hack for internet explorer 6*/
+		height: 100%;
+		width: 100%;
+		top: 0;
+		left: 0;
+		background: #000000;
+		border: 1px solid #cecece;
+		z-index: 9000;
+	}
+
+	#popupContent {
+		display: none;
+		position: fixed;
+		_position: absolute; /* hack for internet explorer 6*/
+		height: 384px;
+		width: 408px;
+		background: #FFFFFF;
+		border: 2px solid #cecece;
+		z-index: 9001;
+		padding: 12px;
+		font-size: 13px;
+	}
+
+	#popupContactClose {
+		font-size: 14px;
+		line-height: 14px;
+		right: 6px;
+		top: 4px;
+		position: absolute;
+		color: #6fa5fd;
+		font-weight: 700;
+		display: block;
+		z-index: 9002;
+	}
+
+</style>
+<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"></script>
+<script type="text/javascript" src="jquery.min.js"></script>
+<noscript>Kein JavaScript zugelassen. Für die Anzeige der OpenKeyMap ist JavaScript notwendig. Weitere Informationen: Die aktuelle Domain sowie die Domains www.openlayers.org und ajax.googleapis.com müssen JavaScript ausführen können.</noscript>
+<script type="text/javascript">
+<!--
+var popupStatus = 0;
+//loading popup with jQuery magic!
+$(document).ready(function(){
+	var windowWidth = document.documentElement.clientWidth;
+	var windowHeight = document.documentElement.clientHeight;
+	var popupHeight = $("#popupContent").height();
+	var popupWidth = $("#popupContent").width();
+	//centering
+	$("#popupContent").css({
+		"position": "absolute",
+		"top": windowHeight / 2 - popupHeight / 2,
+		"left": windowWidth / 2 - popupWidth / 2
+	});
+
+	//only need force for IE6
+	$("#backgroundPopup").css({
+		"height": windowHeight
+	});
+
+	loadPopup();
+
+	$("a#popupContentClose").click(function() {
+		closePopup();
+		return false;
+	} );
+
+	$("#backgroundPopup").click(function() {
+		closePopup();
+	} );
+
+
+	$("h1").click(function(){
+		loadPopup();
+	} );
+});
+
+function loadPopup() {
+	//loads popup only if it is disabled
+	if (popupStatus == 0) {
+		$("#backgroundPopup").css({
+			"opacity": "0.7"
+		});
+		$("#backgroundPopup").fadeIn(100);
+		$("#popupContent").fadeIn(100);
+		popupStatus = 1;
+	}
+}
+
+function closePopup() {
+	//disables popup only if it is enabled
+	if (popupStatus == 1) {
+		$("#backgroundPopup").fadeOut(100);
+		$("#popupContent").fadeOut(100);
+		popupStatus = 0;
+	}
+}
+
+-->
+</script>
+</head>
+<body>
+<h1>OpenKeyMap</h1>
+<div id="map" class="shadow"></div>
+<script type="text/javascript">
+	var projection = new OpenLayers.Projection("EPSG:4326");
+	var icon_size = new OpenLayers.Size(21,25);
+	var icon_offset = new OpenLayers.Pixel(-(icon_size.w/2), -icon_size.h);
+
+	function addMarkerToLayer(layer, lat, lon) {
+		var icon = new OpenLayers.Icon("../images/key.png", icon_size, icon_offset);
+		var lonLat = new OpenLayers.LonLat(lon, lat)
+				.transform(
+					projection, // transform from WGS 1984
+		            		map.getProjectionObject() // to Spherical Mercator Projection
+				);
+		var marker = new OpenLayers.Marker(lonLat, icon);
+		layer.addMarker(marker);
+	}
+
+	map = new OpenLayers.Map("map", {
+                controls:[
+					new OpenLayers.Control.Navigation(),
+					new OpenLayers.Control.PanZoomBar(),
+					new OpenLayers.Control.LayerSwitcher(),
+					new OpenLayers.Control.Permalink(),
+					new OpenLayers.Control.ScaleLine(),
+					new OpenLayers.Control.OverviewMap()
+			]});
+	var mapnik = new OpenLayers.Layer.OSM()
+	map.addLayer(mapnik);
+
+	var lonLat = new OpenLayers.LonLat(6.989,51.032)
+		.transform(
+			new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+            		map.getProjectionObject() // to Spherical Mercator Projection
+          	);
+	map.setCenter(lonLat, 15);
+
+	var markers = new OpenLayers.Layer.Markers( "BigLumber key entries" );
+	map.addLayer(markers);
+
+	// Add markers
+	addMarkerToLayer(markers, 51.033, 6.97);
+	addMarkerToLayer(markers, 51.0335, 6.971);
+	addMarkerToLayer(markers, 51.0334, 6.972);
+	addMarkerToLayer(markers, 51.0333, 6.973);
+	addMarkerToLayer(markers, 51.0332, 6.974);
+	addMarkerToLayer(markers, 51.0331, 6.975);
+
+
+</script>
+
+<div id="popupContent">
+<div style="text-align:right;"><a href="#" id="popupContentClose">x</a></div>
+The OpenKeyMap displays all current keys listed on <a href="http://biglumber.com">BigLumber.com</a> on a map.<br />
+The map data is based on the <a href="http://www.openstreetmap.org">OpenStreetMap project</a>, a free world map. All map data is licensed under the <a href="http://creativecommons.org/licenses/by-sa/2.0/">Creative Commons License CC-BY-SA 2.0</a>.
+	<div id="cclogo" class="button" style="width: 88px">
+		<a href="http://creativecommons.org/licenses/by-sa/2.0/"><img alt="CC by-sa 2.0" border="0" src="http://i.creativecommons.org/l/by-sa/2.0/88x31.png" /></a>
+	</div>
+<br />
+The Key icon is created by <a href="http://www.grafixport.org/">Lothar Grimme</a> and licensed under the <a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License (version unknown)</a>.
+</div>
+<div id="backgroundPopup">
+</div>
+
+</body>
